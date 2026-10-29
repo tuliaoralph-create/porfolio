@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Grand Luxe Resort &mdash; 5-Star Luxury Suites & Online Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #D4AF37;
+      --gold-light: #F3E5AB;
+      --gold-glow: rgba(212, 175, 55, 0.25);
+      --navy-deep: #08101E;
+      --navy-dark: #0F1D33;
+      --navy-card: #152642;
+      --navy-border: rgba(212, 175, 55, 0.2);
+      --text-white: #FFFFFF;
+      --text-muted: #A0B2C6;
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --font-serif: 'Cormorant Garamond', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--navy-deep);
+      color: var(--text-white);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Subtle Gold Star Ambient Lighting */
+    .ambient-gold-1 {
+      position: fixed;
+      top: -100px;
+      left: 15%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, var(--gold-glow) 0%, transparent 70%);
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient-gold-2 {
+      position: fixed;
+      bottom: -150px;
+      right: 10%;
+      width: 550px;
+      height: 550px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, transparent 70%);
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Top luxury bar */
+    .top-luxury-bar {
+      background: rgba(8, 16, 30, 0.98);
+      border-bottom: 1px solid var(--navy-border);
+      padding: 0.45rem 0;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+    }
+    .top-bar-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .currency-switch {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .curr-btn {
+      background: none;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+    .curr-btn.active {
+      color: var(--gold);
+      border-color: var(--gold);
+    }
+
+    /* Main Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8, 16, 30, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--navy-border);
+      padding: 1rem 0;
+      transition: all 0.3s ease;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+    .hotel-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #fff;
+    }
+    .hotel-crest {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--gold);
+      background: rgba(212, 175, 55, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: var(--gold);
+      box-shadow: 0 0 15px var(--gold-glow);
+    }
+    .hotel-brand-text h1 {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      line-height: 1;
+      color: var(--text-white);
+    }
+    .hotel-brand-text span {
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      display: block;
+      margin-top: 0.2rem;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      list-style: none;
+    }
+    .nav-link {
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-link:hover, .nav-link.active { color: var(--gold); }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold) 0%, #B8860B 100%);
+      color: #08101E;
+      font-family: var(--font-sans);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.65rem 1.4rem;
+      border-radius: var(--radius-sm);
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 18px var(--gold-glow);
+      transition: all 0.25s ease;
+    }
+    .btn-gold:hover {
+      background: linear-gradient(135deg, #E6C252 0%, var(--gold) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(212, 175, 55, 0.45);
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      min-height: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 5rem 0 7rem;
+      background: linear-gradient(180deg, rgba(8, 16, 30, 0.4) 0%, rgba(8, 16, 30, 0.95) 100%),
+                  url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+    .hero-stars {
+      color: var(--gold);
+      letter-spacing: 0.4em;
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      font-weight: 600;
+      margin-bottom: 0.85rem;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.6rem, 5.8vw, 4.5rem);
+      font-weight: 600;
+      line-height: 1.12;
+      letter-spacing: -0.01em;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      max-width: 820px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold-light);
+    }
+    .hero-desc {
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.85);
+      max-width: 580px;
+      margin: 0 auto 2.5rem;
+      font-weight: 300;
+    }
+
+    /* Floating Booking Search Bar */
+    .booking-bar-wrapper {
+      position: relative;
+      margin-top: -65px;
+      z-index: 20;
+    }
+    .booking-bar {
+      background: rgba(15, 29, 51, 0.95);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius-md);
+      padding: 1.5rem 2rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px var(--gold-glow);
+      backdrop-filter: blur(16px);
+      display: grid;
+      grid-template-columns: 1.2fr 1.2fr 1fr 1fr auto;
+      gap: 1.25rem;
+      align-items: flex-end;
+    }
+    .search-field label {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+    }
+    .search-input, .search-select {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      background: rgba(8, 16, 30, 0.85);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus, .search-select:focus { border-color: var(--gold); }
+
+    /* Section Styling */
+    .section-padding { padding: 6rem 0; }
+    .section-head {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .section-gold-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .section-serif-title {
+      font-family: var(--font-serif);
+      font-size: 2.6rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.75rem;
+    }
+    .gold-separator {
+      width: 50px;
+      height: 2px;
+      background: var(--gold);
+      margin: 0.85rem auto 1.25rem;
+    }
+    .section-subtext {
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto;
+      font-size: 0.95rem;
+    }
+
+    /* Suite Cards Grid */
+    .suites-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+    .suite-card {
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.35s ease;
+    }
+    .suite-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--gold);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 35px var(--gold-glow);
+    }
+    .suite-thumb-wrap {
+      width: 100%;
+      height: 240px;
+      overflow: hidden;
+      position: relative;
+      background: #08101E;
+    }
+    .suite-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+    .suite-card:hover .suite-img { transform: scale(1.06); }
+    .suite-tier-badge {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(8, 16, 30, 0.88);
+      border: 1px solid var(--gold);
+      color: var(--gold-light);
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+    .suite-avail-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10B981;
+      color: #10B981;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.68rem;
+      font-weight: 700;
+      backdrop-filter: blur(8px);
+    }
+
+    .suite-body {
+      padding: 1.75rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .suite-title {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: #fff;
+    }
+    .suite-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .suite-amenities {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+    .amenity-pill {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius-sm);
+      color: var(--gold-light);
+    }
+
+    .suite-footer {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--navy-border);
+      padding-top: 1.25rem;
+    }
+    .suite-price-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .suite-price-num {
+      font-family: var(--font-serif);
+      font-size: 1.65rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .suite-price-lbl {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .reserve-btn {
+      padding: 0.65rem 1.25rem;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .reserve-btn:hover {
+      background: var(--gold);
+      color: #08101E;
+      box-shadow: 0 0 18px var(--gold-glow);
+    }
+
+    /* Amenities Showcase */
+    .amenities-section {
+      background: var(--navy-dark);
+      border-top: 1px solid var(--navy-border);
+      border-bottom: 1px solid var(--navy-border);
+      padding: 5rem 0;
+    }
+    .amenities-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.75rem;
+    }
+    .amenity-card {
+      background: var(--navy-card);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .amenity-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--gold);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+    .amenity-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+    .amenity-name {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .amenity-sub {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Booking Confirmation Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 8, 16, 0.88);
+      backdrop-filter: blur(10px);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-dialog {
+      background: var(--navy-card);
+      border: 1px solid var(--gold);
+      border-radius: var(--radius-lg);
+      max-width: 520px;
+      width: 100%;
+      padding: 2.5rem;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 50px var(--gold-glow);
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-overlay.active .modal-dialog { transform: translateY(0); }
+    .close-modal-btn {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    .close-modal-btn:hover { color: #fff; }
+
+    .modal-header-serif {
+      font-family: var(--font-serif);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 0.35rem;
+    }
+    .modal-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .booking-summary-box {
+      background: var(--navy-deep);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius-sm);
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-line {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 0.35rem;
+      color: var(--text-muted);
+    }
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--gold);
+      border-top: 1px solid var(--navy-border);
+      padding-top: 0.65rem;
+      margin-top: 0.65rem;
+    }
+
+    .modal-form-group {
+      margin-bottom: 1rem;
+    }
+    .modal-form-group label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+    .modal-form-input {
+      width: 100%;
+      padding: 0.75rem 0.95rem;
+      background: var(--navy-deep);
+      border: 1px solid var(--navy-border);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .modal-form-input:focus { border-color: var(--gold); }
+
+    /* Success confirmation state */
+    .voucher-card {
+      text-align: center;
+      display: none;
+    }
+    .voucher-crest {
+      font-size: 3.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .voucher-code {
+      display: inline-block;
+      font-family: monospace;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid var(--gold);
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--radius-sm);
+      margin: 1rem 0 1.25rem;
+    }
+
+    /* Toast */
+    .hotel-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--navy-dark);
+      border: 1px solid var(--gold);
+      color: #fff;
+      padding: 0.85rem 1.75rem;
+      border-radius: var(--radius-full);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8), 0 0 25px var(--gold-glow);
+      font-size: 0.88rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999;
+    }
+    .hotel-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      background: #040912;
+      border-top: 1px solid var(--navy-border);
+      padding: 4rem 0 2.5rem;
+    }
+    .footer-content-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    .footer-copy-row {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    @media (max-width: 992px) {
+      .booking-bar { grid-template-columns: 1fr 1fr; }
+      .suites-grid { grid-template-columns: repeat(2, 1fr); }
+      .amenities-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .nav-menu { display: none; }
+      .booking-bar { grid-template-columns: 1fr; }
+      .suites-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2.3rem; }
+      .amenities-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Luxury Glow -->
+  <div class="ambient-gold-1"></div>
+  <div class="ambient-gold-2"></div>
+
+  <!-- Top bar -->
+  <div class="top-luxury-bar">
+    <div class="container top-bar-inner">
+      <div>✦ Official Five-Star Luxury Booking Portal &bull; Best Rate Guarantee</div>
+      <div class="currency-switch">
+        <span>Currency:</span>
+        <button class="curr-btn active" onclick="setCurrency('USD', this)">USD ($)</button>
+        <button class="curr-btn" onclick="setCurrency('PHP', this)">PHP (₱)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-inner">
+      <a href="#hero" class="hotel-brand">
+        <div class="hotel-crest">⚜</div>
+        <div class="hotel-brand-text">
+          <h1>The Grand Luxe</h1>
+          <span>Resort &bull; Ocean Spa &bull; Villas</span>
+        </div>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#hero" class="nav-link active">Home</a></li>
+        <li><a href="#suites" class="nav-link">Suites &amp; Villas</a></li>
+        <li><a href="#amenities" class="nav-link">Amenities</a></li>
+        <li><a href="#accolades" class="nav-link">Accolades</a></li>
+      </ul>
+
+      <a href="#suites" class="btn-gold">
+        <span>Reserve Stay</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="hero-stars">★★★★★</div>
+      <div class="hero-eyebrow">An Unrivaled Sanctuary of Timeless Opulence</div>
+      <h2 class="hero-title">
+        Where Elegance Meets<br>The <em>Endless Horizon</em>.
+      </h2>
+      <p class="hero-desc">
+        Immerse yourself in cliffside ocean villas, private infinity pools, and world-renowned 24/7 butler service. Curated for the discerning traveler.
+      </p>
+    </div>
+  </section>
+
+  <!-- Interactive Floating Booking Bar -->
+  <div class="container booking-bar-wrapper">
+    <div class="booking-bar">
+      <div class="search-field">
+        <label>Check-In Date</label>
+        <input type="date" class="search-input" id="checkInDate" onchange="recalcNights()">
+      </div>
+      <div class="search-field">
+        <label>Check-Out Date</label>
+        <input type="date" class="search-input" id="checkOutDate" onchange="recalcNights()">
+      </div>
+      <div class="search-field">
+        <label>Guests</label>
+        <select class="search-select" id="guestCountSelect">
+          <option value="2">2 Adults</option>
+          <option value="1">1 Adult (Solo)</option>
+          <option value="3">2 Adults, 1 Child</option>
+          <option value="4">4 Guests (Family Suite)</option>
+        </select>
+      </div>
+      <div class="search-field">
+        <label>Suite Category</label>
+        <select class="search-select" id="categoryFilter" onchange="filterSuitesByCategory(this.value)">
+          <option value="all">All Luxury Suites</option>
+          <option value="villa">Oceanfront Villas</option>
+          <option value="penthouse">Sky Penthouses</option>
+          <option value="suite">Executive Suites</option>
+        </select>
+      </div>
+      <div>
+        <button type="button" class="btn-gold" style="width:100%;" onclick="scrollToSuites()">
+          <span>Check Rates</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Suites & Villas Collection -->
+  <section class="section-padding" id="suites">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-gold-tag">Private Residences</span>
+        <h3 class="section-serif-title">Curated Suites &amp; Ocean Villas</h3>
+        <div class="gold-separator"></div>
+        <p class="section-subtext">
+          Each residence features panoramic sea vistas, bespoke Italian marble baths, and tailored concierge care.
+        </p>
+      </div>
+
+      <div class="suites-grid" id="suitesGrid"></div>
+    </div>
+  </section>
+
+  <!-- Amenities Showcase -->
+  <section class="amenities-section" id="amenities">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-gold-tag">Unmatched Comforts</span>
+        <h3 class="section-serif-title">World-Class Experiences</h3>
+        <div class="gold-separator"></div>
+      </div>
+
+      <div class="amenities-grid">
+        <div class="amenity-card">
+          <span class="amenity-icon">🏊</span>
+          <h4 class="amenity-name">Cliffside Infinity Pool</h4>
+          <p class="amenity-sub">Heated seawater horizon pool suspended 80 meters above azure coastal cliffs.</p>
+        </div>
+        <div class="amenity-card">
+          <span class="amenity-icon">💆</span>
+          <h4 class="amenity-name">Botanical Sothys Spa</h4>
+          <p class="amenity-sub">Holistic ocean-mineral wraps, private thermal saunas, and couples massage pavilions.</p>
+        </div>
+        <div class="amenity-card">
+          <span class="amenity-icon">🍷</span>
+          <h4 class="amenity-name">Michelin Dining: L’Azure</h4>
+          <p class="amenity-sub">Ocean-to-table tasting menus curated by world-class Michelin star guest chefs.</p>
+        </div>
+        <div class="amenity-card">
+          <span class="amenity-icon">🚁</span>
+          <h4 class="amenity-name">Helipad &amp; Yacht Fleet</h4>
+          <p class="amenity-sub">VIP private airport helicopter transfers and 65-foot sunset catamaran charters.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Booking Modal Pipeline -->
+  <div class="modal-overlay" id="bookingModal">
+    <div class="modal-dialog">
+      <button class="close-modal-btn" onclick="closeBookingModal()">&times;</button>
+
+      <!-- Form Mode -->
+      <div id="bookingFormWrapper">
+        <h3 class="modal-header-serif" id="modalSuiteName">Reserve Presidential Suite</h3>
+        <p class="modal-sub">Confirm your dates and guest details to lock in your luxury reservation.</p>
+
+        <div class="booking-summary-box">
+          <div class="summary-line">
+            <span>Duration:</span>
+            <span id="summaryDuration">3 Nights (Fri &ndash; Mon)</span>
+          </div>
+          <div class="summary-line">
+            <span>Rate Per Night:</span>
+            <span id="summaryRate">$520.00</span>
+          </div>
+          <div class="summary-line">
+            <span>Luxury Tax &amp; Resort Fee (12%):</span>
+            <span id="summaryTax">$187.20</span>
+          </div>
+          <div class="summary-line" style="color:#10B981;">
+            <span>Early Booker Courtesy (-10%):</span>
+            <span id="summaryDiscount">-$156.00</span>
+          </div>
+          <div class="summary-total">
+            <span>Guaranteed Total:</span>
+            <span id="summaryGrandTotal">$1,591.20</span>
+          </div>
+        </div>
+
+        <form onsubmit="handleBookingSubmit(event)">
+          <div class="modal-form-group">
+            <label>Primary Guest Name</label>
+            <input type="text" class="modal-form-input" placeholder="e.g. Lord Julian Sterling" required>
+          </div>
+          <div class="modal-form-group">
+            <label>Email Address for Confirmation</label>
+            <input type="email" class="modal-form-input" placeholder="julian@sterling.com" required>
+          </div>
+          <div class="modal-form-group">
+            <label>Special Requests</label>
+            <input type="text" class="modal-form-input" placeholder="e.g. Airport Limousine Pickup, Chilled Champagne">
+          </div>
+          <button type="submit" class="btn-gold" style="width:100%;margin-top:0.75rem;padding:0.85rem;">
+            <span>Confirm &amp; Issue Booking Voucher</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Success Voucher Mode -->
+      <div class="voucher-card" id="voucherCard">
+        <div class="voucher-crest">⚜️</div>
+        <h3 class="modal-header-serif" style="color:var(--gold);">Stay Confirmed</h3>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:0.75rem;">
+          Your luxury suite has been successfully reserved. We look forward to greeting you.
+        </p>
+        <div class="voucher-code" id="voucherCodeDisplay">GLH-2026-9812</div>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1.5rem;">
+          A digital concierge itinerary and check-in pass have been dispatched to your email.
+        </p>
+        <button type="button" class="btn-gold" style="width:100%;" onclick="closeBookingModal()">
+          <span>Return to Resort</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notice -->
+  <div class="hotel-toast" id="hotelToast">
+    <span>Reservation updated</span>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content-row">
+        <div>
+          <a href="#hero" class="hotel-brand">
+            <div class="hotel-crest">⚜</div>
+            <div class="hotel-brand-text">
+              <h1>The Grand Luxe</h1>
+              <span>Resort &bull; Ocean Spa &bull; Villas</span>
+            </div>
+          </a>
+          <p style="color:var(--text-muted);font-size:0.85rem;max-width:320px;margin-top:0.75rem;">
+            Full-stack online hotel booking portal project by Ralph Tuliao. Features real-time date calculation, tiered suite pricing, and responsive luxury UI.
+          </p>
+        </div>
+
+        <div style="font-size:0.85rem;color:var(--text-muted);text-align:right;">
+          <strong style="color:var(--gold);display:block;margin-bottom:0.3rem;">Concierge Desk &bull; 24/7</strong>
+          Paradise Cove Highway, Emerald Coast<br>
+          Direct Line: +1 (800) 589-LUXE &bull; concierge@grandluxe.com
+        </div>
+      </div>
+
+      <div class="footer-copy-row">
+        <div>&copy; 2026 The Grand Luxe Hotel &amp; Resort. Portfolio Showcase by Ralph Tuliao.</div>
+        <div>Forbes Travel Guide Five-Star Recognized &bull; World Luxury Hotel Winner</div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Suite Catalog Data
+    const suites = [
+      {
+        id: 1,
+        title: "Presidential Oceanfront Villa",
+        category: "villa",
+        priceUSD: 650,
+        desc: "Overwater two-story residence with a private 15-meter glass-bottom infinity pool, wraparound sun deck, and dedicated 24-hour private butler.",
+        image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=700&q=80",
+        badge: "Crown Residence",
+        avail: "Only 1 Villa Left",
+        amenities: ["Private Pool", "24/7 Butler", "Champagne Bar", "Private Helipad Access"]
+      },
+      {
+        id: 2,
+        title: "Sky Horizon Penthouse",
+        category: "penthouse",
+        priceUSD: 520,
+        desc: "High-altitude luxury perched atop the resort with 360-degree panoramic ocean views, outdoor marble hydrotherapy tub, and personal sauna.",
+        image: "https://images.unsplash.com/photo-1591088398332-8a7791972843?auto=format&fit=crop&w=700&q=80",
+        badge: "Panoramic View",
+        avail: "2 Suites Available",
+        amenities: ["Panoramic Terrace", "Hydrotherapy Tub", "Private Elevator", "Wine Cellar"]
+      },
+      {
+        id: 3,
+        title: "Royal Executive Ocean Suite",
+        category: "suite",
+        priceUSD: 380,
+        desc: "Spacious master bedroom with plush California King featherbed, deep soaking Italian marble bath, and private sunset dining terrace.",
+        image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?auto=format&fit=crop&w=700&q=80",
+        badge: "Romantic Favorite",
+        avail: "Available Tonight",
+        amenities: ["Sunset Terrace", "Marble Bath", "Nespresso Atelier", "Soundproofed Lounge"]
+      },
+      {
+        id: 4,
+        title: "Azure Beachfront Villa",
+        category: "villa",
+        priceUSD: 480,
+        desc: "Steps away from white powder sand with a secluded coconut garden, private plunge pool, outdoor rain shower, and evening bonfire service.",
+        image: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=700&q=80",
+        badge: "Direct Beach Access",
+        avail: "3 Villas Left",
+        amenities: ["Private Beach Path", "Plunge Pool", "Outdoor Shower", "Hammock Garden"]
+      },
+      {
+        id: 5,
+        title: "Deluxe Coastal Garden Suite",
+        category: "suite",
+        priceUSD: 280,
+        desc: "Surrounded by lush tropical botanical flora, featuring high cedar-beamed ceilings, dual vanity granite bath, and afternoon tea service.",
+        image: "https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=700&q=80",
+        badge: "Botanical Retreat",
+        avail: "Available",
+        amenities: ["Botanical Garden", "Dual Vanity", "Rainforest Balcony", "Tea Service"]
+      },
+      {
+        id: 6,
+        title: "Imperial Grand Suite",
+        category: "penthouse",
+        priceUSD: 440,
+        desc: "Sprawling two-bedroom residence featuring an opulent formal dining lounge, grand piano, and curated original fine art pieces.",
+        image: "https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=700&q=80",
+        badge: "VIP Choice",
+        avail: "1 Suite Remaining",
+        amenities: ["Grand Piano", "Dining Room", "Master Balcony", "Chauffeur Service"]
+      }
+    ];
+
+    let currentCurrency = 'USD';
+    const exchangeRateUSDToPHP = 56.5;
+    let selectedSuite = suites[0];
+
+    function formatPrice(usdPrice) {
+      if (currentCurrency === 'PHP') {
+        const php = usdPrice * exchangeRateUSDToPHP;
+        return '₱' + Math.round(php).toLocaleString();
+      }
+      return '$' + usdPrice.toLocaleString();
+    }
+
+    function renderSuites(list) {
+      const grid = document.getElementById('suitesGrid');
+      grid.innerHTML = list.map(suite => `
+        <div class="suite-card">
+          <div class="suite-thumb-wrap">
+            <img src="${suite.image}" alt="${suite.title}" class="suite-img" loading="lazy" onerror="this.src='assets/images/hotel-booking.jpg'">
+            <span class="suite-tier-badge">${suite.badge}</span>
+            <span class="suite-avail-badge">${suite.avail}</span>
+          </div>
+          <div class="suite-body">
+            <h4 class="suite-title">${suite.title}</h4>
+            <p class="suite-desc">${suite.desc}</p>
+            <div class="suite-amenities">
+              ${suite.amenities.map(a => `<span class="amenity-pill">✦ ${a}</span>`).join('')}
+            </div>
+            <div class="suite-footer">
+              <div class="suite-price-wrap">
+                <span class="suite-price-num">${formatPrice(suite.priceUSD)}</span>
+                <span class="suite-price-lbl">per night &bull; taxes incl.</span>
+              </div>
+              <button type="button" class="reserve-btn" onclick="openBookingModal(${suite.id})">
+                <span>Reserve Suite</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function setCurrency(curr, btn) {
+      currentCurrency = curr;
+      document.querySelectorAll('.curr-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderSuites(suites);
+      showToast(`Currency converted to ${curr}`);
+    }
+
+    function filterSuitesByCategory(cat) {
+      if (cat === 'all') {
+        renderSuites(suites);
+      } else {
+        renderSuites(suites.filter(s => s.category === cat));
+      }
+    }
+
+    function scrollToSuites() {
+      document.getElementById('suites').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function recalcNights() {
+      const inDate = new Date(document.getElementById('checkInDate').value);
+      const outDate = new Date(document.getElementById('checkOutDate').value);
+      const diffTime = outDate - inDate;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays > 0 ? diffDays : 1;
+    }
+
+    function openBookingModal(suiteId) {
+      selectedSuite = suites.find(s => s.id === suiteId) || suites[0];
+      const nights = recalcNights();
+
+      document.getElementById('bookingFormWrapper').style.display = 'block';
+      document.getElementById('voucherCard').style.display = 'none';
+
+      document.getElementById('modalSuiteName').textContent = selectedSuite.title;
+      document.getElementById('summaryDuration').textContent = `${nights} Night${nights > 1 ? 's' : ''}`;
+      
+      const ratePerNight = selectedSuite.priceUSD;
+      const subtotal = ratePerNight * nights;
+      const tax = subtotal * 0.12;
+      const discount = subtotal * 0.10;
+      const grandTotal = subtotal + tax - discount;
+
+      document.getElementById('summaryRate').textContent = formatPrice(ratePerNight);
+      document.getElementById('summaryTax').textContent = formatPrice(Math.round(tax));
+      document.getElementById('summaryDiscount').textContent = '-' + formatPrice(Math.round(discount));
+      document.getElementById('summaryGrandTotal').textContent = formatPrice(Math.round(grandTotal));
+
+      document.getElementById('bookingModal').classList.add('active');
+    }
+
+    function closeBookingModal() {
+      document.getElementById('bookingModal').classList.remove('active');
+    }
+
+    function handleBookingSubmit(e) {
+      e.preventDefault();
+      // Switch to voucher confirmation
+      document.getElementById('bookingFormWrapper').style.display = 'none';
+      const randomCode = 'GLH-2026-' + Math.floor(1000 + Math.random() * 9000);
+      document.getElementById('voucherCodeDisplay').textContent = randomCode;
+      document.getElementById('voucherCard').style.display = 'block';
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('hotelToast');
+      toast.querySelector('span').textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => { toast.classList.remove('show'); }, 2800);
+    }
+
+    // Initialize Default Dates: Tomorrow -> +3 Days
+    const today = new Date();
+    const dIn = new Date();
+    dIn.setDate(today.getDate() + 1);
+    const dOut = new Date();
+    dOut.setDate(today.getDate() + 4);
+
+    document.getElementById('checkInDate').value = dIn.toISOString().split('T')[0];
+    document.getElementById('checkOutDate').value = dOut.toISOString().split('T')[0];
+
+    // Render initial suites
+    renderSuites(suites);
+  </script>
+</body>
+</html>

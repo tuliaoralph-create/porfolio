@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "username": "admin",
+    "email": "ralphtuliao.tuliao@gmail.com",
+    "password_hash": "$2y$10$eE0m1J8i04tNrvzP6y73UOMfWwGZJ9G7zZqTfT4H5PzX3f7g9a8sC",
+    "role": "admin",
+    "is_active": 1,
+    "last_login": null,
+    "created_at": "2026-10-28 12:00:00"
+  }
+]

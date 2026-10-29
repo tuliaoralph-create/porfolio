@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NovaCore Studios &mdash; Modern Corporate & Agency Website Live Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-dark: #08090d;
+      --bg-card: rgba(18, 20, 29, 0.75);
+      --bg-card-hover: rgba(28, 32, 48, 0.85);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(99, 102, 241, 0.4);
+      --primary: #6366f1;
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+      --accent: #06b6d4;
+      --accent-glow: rgba(99, 102, 241, 0.35);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    [data-theme="cyan"] {
+      --primary: #06b6d4;
+      --primary-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+      --accent: #10b981;
+      --accent-glow: rgba(6, 182, 212, 0.35);
+      --border-accent: rgba(6, 182, 212, 0.4);
+    }
+
+    [data-theme="crimson"] {
+      --primary: #ff1e42;
+      --primary-gradient: linear-gradient(135deg, #ff1e42 0%, #ff5238 50%, #f59e0b 100%);
+      --accent: #f43f5e;
+      --accent-glow: rgba(255, 30, 66, 0.35);
+      --border-accent: rgba(255, 30, 66, 0.4);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Ambient background lighting */
+    .bg-glow-1 {
+      position: fixed;
+      top: -150px;
+      left: 10%;
+      width: 550px;
+      height: 550px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      filter: blur(120px);
+      pointer-events: none;
+      z-index: 0;
+      transition: background 0.4s ease;
+    }
+    .bg-glow-2 {
+      position: fixed;
+      bottom: -150px;
+      right: 5%;
+      width: 650px;
+      height: 650px;
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%);
+      filter: blur(140px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Grid overlay pattern */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Navigation Bar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(8, 9, 13, 0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 0;
+      transition: all 0.3s ease;
+    }
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+      color: var(--text-main);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: var(--primary-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .brand-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.5rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      color: var(--text-muted);
+      margin-left: 0.35rem;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.8rem;
+      list-style: none;
+    }
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+    .nav-link:hover { color: var(--text-main); }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* Theme Picker Button */
+    .theme-picker {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      padding: 0.25rem 0.35rem;
+      gap: 0.35rem;
+    }
+    .theme-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .theme-dot:hover { transform: scale(1.2); }
+    .theme-dot.active { border-color: #fff; transform: scale(1.15); }
+    .theme-dot.dot-violet { background: #6366f1; }
+    .theme-dot.dot-cyan { background: #06b6d4; }
+    .theme-dot.dot-crimson { background: #ff1e42; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: var(--radius-md);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.25s ease;
+    }
+    .btn-primary {
+      background: var(--primary-gradient);
+      color: #fff;
+      box-shadow: 0 4px 20px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px var(--accent-glow);
+      color: #fff;
+    }
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-main);
+      border-color: var(--border);
+      backdrop-filter: blur(8px);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--border-accent);
+      transform: translateY(-2px);
+    }
+    .btn-sm { padding: 0.45rem 1rem; font-size: 0.8rem; border-radius: var(--radius-sm); }
+
+    /* Hero Section */
+    .hero {
+      padding: 5rem 0 4rem;
+      text-align: center;
+      position: relative;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.95rem;
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-full);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 25px var(--accent-glow);
+    }
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2.3rem, 5.5vw, 4.2rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.25rem;
+      max-width: 880px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .text-gradient {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 640px;
+      margin: 0 auto 2.5rem;
+    }
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 3.5rem;
+    }
+
+    /* Trust Stats */
+    .hero-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 2rem;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+    .stat-box { text-align: center; }
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1;
+      margin-bottom: 0.35rem;
+    }
+    .stat-number span { color: var(--primary); }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+    }
+
+    /* Section Headers */
+    .section-header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+    .section-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--primary);
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.85rem;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      max-width: 580px;
+      margin: 0 auto;
+      font-size: 0.95rem;
+    }
+
+    /* Interactive Services Section */
+    .services-section { padding: 5rem 0; }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2.2rem;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--primary-gradient);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .service-card:hover {
+      transform: translateY(-6px);
+      background: var(--bg-card-hover);
+      border-color: var(--border-accent);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 30px var(--accent-glow);
+    }
+    .service-card:hover::before { opacity: 1; }
+
+    .service-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid var(--border-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      margin-bottom: 1.4rem;
+      transition: all 0.3s ease;
+    }
+    .service-card:hover .service-icon-wrap {
+      background: var(--primary-gradient);
+      color: #fff;
+      transform: scale(1.08);
+      box-shadow: 0 0 25px var(--accent-glow);
+    }
+    .service-title {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+      color: var(--text-main);
+    }
+    .service-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+    .service-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .pill {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      color: var(--text-dim);
+    }
+    .service-card:hover .pill {
+      color: var(--text-muted);
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    /* Interactive Portfolio / Case Studies */
+    .portfolio-section { padding: 5rem 0; }
+    .portfolio-filter-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2.75rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .filter-btn:hover {
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.18);
+    }
+    .filter-btn.active {
+      background: var(--primary-gradient);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 15px var(--accent-glow);
+    }
+
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--border-accent);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 30px var(--accent-glow);
+    }
+
+    .project-preview {
+      height: 180px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0f131c;
+    }
+    .preview-bg-mesh {
+      position: absolute;
+      inset: 0;
+      opacity: 0.35;
+      transition: transform 0.5s ease, opacity 0.3s ease;
+    }
+    .project-card:hover .preview-bg-mesh {
+      transform: scale(1.08);
+      opacity: 0.5;
+    }
+    .preview-device {
+      position: relative;
+      z-index: 2;
+      width: 78%;
+      height: 75%;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(6px);
+      transition: transform 0.3s ease;
+    }
+    .project-card:hover .preview-device {
+      transform: translateY(-4px);
+    }
+    .device-header {
+      display: flex;
+      gap: 5px;
+    }
+    .device-circle {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.25);
+    }
+    .device-content {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .project-body {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-category {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 0.35rem;
+    }
+    .project-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.45rem;
+      color: var(--text-main);
+    }
+    .project-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 1.25rem;
+    }
+    .project-metrics {
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .metric-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .metric-val {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .metric-lbl {
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .project-view-btn {
+      background: none;
+      border: none;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: color 0.2s, gap 0.2s;
+    }
+    .project-view-btn:hover {
+      color: var(--primary);
+      gap: 0.5rem;
+    }
+
+    /* Interactive Cost & Timeline Project Estimator */
+    .estimator-section {
+      padding: 5rem 0;
+      background: rgba(13, 15, 23, 0.6);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+    .estimator-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 3rem;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 40px var(--accent-glow);
+    }
+
+    .estimator-controls { display: flex; flex-direction: column; gap: 2rem; }
+    .control-group label {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .range-val {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    .project-type-pills {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.65rem;
+    }
+    .type-radio-btn {
+      padding: 0.65rem 0.85rem;
+      text-align: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .type-radio-btn:hover { border-color: rgba(255, 255, 255, 0.2); }
+    .type-radio-btn.active {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: var(--primary);
+      color: #fff;
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .slider-input {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      outline: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+    }
+    .slider-input::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 12px var(--primary);
+      cursor: pointer;
+      border: 2px solid #fff;
+    }
+
+    .addon-checkboxes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.65rem;
+    }
+    .addon-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.6rem 0.85rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+    .addon-item:hover { border-color: rgba(255, 255, 255, 0.15); }
+    .addon-item.selected {
+      background: rgba(99, 102, 241, 0.1);
+      border-color: var(--border-accent);
+      color: var(--text-main);
+    }
+    .addon-item input { display: none; }
+    .addon-check {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: transparent;
+      transition: all 0.2s;
+    }
+    .addon-item.selected .addon-check {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* Estimator Output Display */
+    .estimator-output {
+      background: rgba(8, 9, 13, 0.95);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 2.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+    .estimator-output::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: var(--primary);
+      filter: blur(60px);
+      opacity: 0.2;
+    }
+    .out-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+    }
+    .out-heading {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    .out-price-box {
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .out-price-lbl {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-bottom: 0.2rem;
+    }
+    .out-price-num {
+      font-family: var(--font-heading);
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+    .out-timeline-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      font-size: 0.9rem;
+    }
+    .out-time-val {
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* Testimonials Carousel */
+    .testimonials-section { padding: 5rem 0; }
+    .testimonial-card-single {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      max-width: 780px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4);
+    }
+    .stars-row {
+      color: #f59e0b;
+      margin-bottom: 1.25rem;
+      font-size: 1.1rem;
+      letter-spacing: 2px;
+    }
+    .quote-text {
+      font-size: 1.15rem;
+      color: var(--text-main);
+      font-weight: 500;
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      font-style: italic;
+    }
+    .client-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--primary-gradient);
+      color: #fff;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+    .client-name {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-main);
+    }
+    .client-role {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+    .carousel-nav-dots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1.75rem;
+    }
+    .carousel-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .carousel-dot.active {
+      width: 24px;
+      border-radius: 5px;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    /* Modal Structure */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 5, 8, 0.85);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-box {
+      background: #0f121a;
+      border: 1px solid var(--border-accent);
+      border-radius: var(--radius-lg);
+      width: 100%;
+      max-width: 540px;
+      padding: 2.5rem;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 40px var(--accent-glow);
+      position: relative;
+      transform: translateY(20px) scale(0.96);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .modal-backdrop.open .modal-box {
+      transform: translateY(0) scale(1);
+    }
+    .modal-close {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+    .modal-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .modal-desc {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.75rem;
+    }
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.45rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .form-control {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* Toast */
+    .toast-popup {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #0f121a;
+      border: 1px solid #10b981;
+      padding: 1rem 1.4rem;
+      border-radius: var(--radius-md);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.3);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 2000;
+    }
+    .toast-popup.visible {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3.5rem 0 2rem;
+      background: rgba(6, 7, 10, 0.95);
+      position: relative;
+      z-index: 1;
+    }
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .footer-desc {
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      max-width: 320px;
+      margin-top: 0.5rem;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .badge-live-demo {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.65rem;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: var(--radius-full);
+      color: #10b981;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .services-grid, .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
+      .estimator-card { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-stats-bar { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+    }
+    @media (max-width: 640px) {
+      .nav-menu { display: none; }
+      .services-grid, .portfolio-grid { grid-template-columns: 1fr; }
+      .hero-title { font-size: 2.2rem; }
+      .hero-stats-bar { grid-template-columns: 1fr; }
+      .addon-checkboxes { grid-template-columns: 1fr; }
+      .project-type-pills { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glow Backgrounds -->
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="container nav-inner">
+      <a href="#hero" class="brand-logo">
+        <div class="brand-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+            <polyline points="2 17 12 22 22 17"></polyline>
+            <polyline points="2 12 12 17 22 12"></polyline>
+          </svg>
+        </div>
+        <span>NEXUS</span>
+        <span class="brand-tag">SYSTEMS</span>
+      </a>
+
+      <ul class="nav-menu">
+        <li><a href="#services" class="nav-link">Services</a></li>
+        <li><a href="#portfolio" class="nav-link">Case Studies</a></li>
+        <li><a href="#estimator" class="nav-link">Cost Calculator</a></li>
+        <li><a href="#testimonials" class="nav-link">Tech & Reviews</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Interactive Theme Switcher -->
+        <div class="theme-picker" title="Switch Website Color Accent">
+          <div class="theme-dot dot-violet active" onclick="setTheme('violet')"></div>
+          <div class="theme-dot dot-cyan" onclick="setTheme('cyan')"></div>
+          <div class="theme-dot dot-crimson" onclick="setTheme('crimson')"></div>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-sm" onclick="openContactModal()">
+          <span>Request Demo</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="container">
+      <div class="badge-pill">
+        <span class="badge-dot"></span>
+        <span>Nexus Systems &bull; Enterprise Website Live Interactive Demo</span>
+      </div>
+
+      <h1 class="hero-title">
+        Driving <span class="text-gradient">Innovation</span>.<br>Fueling The <span class="text-gradient">Future</span>.
+      </h1>
+
+      <p class="hero-subtitle">
+        A dynamic tech agency delivering cutting-edge digital solutions, AI integration, and scalable architecture. Built with modern web architecture and fluid micro-interactions.
+      </p>
+
+      <div class="hero-cta">
+        <button type="button" class="btn btn-primary" onclick="scrollToId('estimator')">
+          <span>Explore Solutions</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+        <button type="button" class="btn btn-outline" onclick="scrollToId('services')">
+          <span>Explore Capabilities</span>
+        </button>
+      </div>
+
+      <!-- Trust Metrics Bar -->
+      <div class="hero-stats-bar">
+        <div class="stat-box">
+          <div class="stat-number">99.8<span>%</span></div>
+          <div class="stat-label">Client Satisfaction</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">3.4<span>x</span></div>
+          <div class="stat-label">Avg. Conversion Boost</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">&lt;0.4<span>s</span></div>
+          <div class="stat-label">Core Web Vitals Speed</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">50<span>+</span></div>
+          <div class="stat-label">Enterprise Deployments</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Services Matrix -->
+  <section class="services-section" id="services">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Core Competencies</span>
+        <h2 class="section-title">Designed for <span class="text-gradient">Maximum Impact</span></h2>
+        <p class="section-desc">
+          Every solution is engineered for performance, security, and effortless scalability across all devices.
+        </p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card" onclick="openServiceDetail('Full-Stack Web Engineering', 'Custom responsive web applications architected with robust PHP/Node backends, optimized MySQL relational schemas, and reactive JavaScript client layers.')">
+          <div class="service-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+          <h3 class="service-title">Full-Stack Web Apps</h3>
+          <p class="service-desc">
+            End-to-end architectures from custom backend APIs and relational databases to high-speed dynamic frontends.
+          </p>
+          <div class="service-pills">
+            <span class="pill">PHP 8</span>
+            <span class="pill">MySQL</span>
+            <span class="pill">JavaScript ES6+</span>
+            <span class="pill">REST APIs</span>
+          </div>
+        </div>
+
+        <div class="service-card" onclick="openServiceDetail('UI/UX Design Systems', 'Pixel-perfect, accessibility-compliant interface design featuring dark mode themes, subtle ambient glow aesthetics, and frictionless user journeys.')">
+          <div class="service-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+              <line x1="9" y1="21" x2="9" y2="9"></line>
+            </svg>
+          </div>
+          <h3 class="service-title">UI/UX & Design Systems</h3>
+          <p class="service-desc">
+            Modern visual identity, glassmorphism UI components, fluid typography scales, and interactive states.
+          </p>
+          <div class="service-pills">
+            <span class="pill">Figma</span>
+            <span class="pill">Glassmorphism</span>
+            <span class="pill">Micro-Animations</span>
+            <span class="pill">Mobile-First</span>
+          </div>
+        </div>
+
+        <div class="service-card" onclick="openServiceDetail('E-Commerce & Portals', 'Scalable online stores and self-service portals with real-time cart calculations, payment gateways, and admin dashboards.')">
+          <div class="service-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+            </svg>
+          </div>
+          <h3 class="service-title">E-Commerce & Ordering</h3>
+          <p class="service-desc">
+            Transactional shopping experiences like Tapseafood with instant cart drawers, dynamic taxes, and receipts.
+          </p>
+          <div class="service-pills">
+            <span class="pill">Cart Engine</span>
+            <span class="pill">Checkout Pipeline</span>
+            <span class="pill">Order Status</span>
+          </div>
+        </div>
+
+        <div class="service-card" onclick="openServiceDetail('Hotel & Resource Booking', 'Online reservation systems featuring dynamic calendar date pickers, room availability algorithms, and automated guest confirmations.')">
+          <div class="service-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+          </div>
+          <h3 class="service-title">Booking & Reservations</h3>
+          <p class="service-desc">
+            Automated calendar scheduling, availability engines, tiered rates, and interactive guest confirmations.
+          </p>
+          <div class="service-pills">
+            <span class="pill">Date Pickers</span>
+            <span class="pill">Suite Filters</span>
+            <span class="pill">Automated Confirmations</span>
+          </div>
+        </div>
+
+        <div class="service-card" onclick="openServiceDetail('IoT & Hardware Integration', 'Bridging embedded hardware prototypes with web dashboards via serial communication, Arduino sensors, relays, and OLED telemetry.')">
+          <div class="service-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="4" y="4" width="16" height="16" rx="2" ry="2"></rect>
+              <rect x="9" y="9" width="6" height="6"></rect>
+              <line x1="9" y1="1" x2="9" y2="4"></line>
+              <line x1="15" y1="1" x2="15" y2="4"></line>
+              <line x1="9" y1="20" x2="9" y2="23"></line>
+              <line x1="15" y1="20" x2="15" y2="23"></line>
+              <line x1="20" y1="9" x2="23" y2="9"></line>
+              <line x1="20" y1="14" x2="23" y2="14"></line>
+              <line x1="1" y1="9" x2="4" y2="9"></line>
+              <line x1="1" y1="14" x2="4" y2="14"></line>
+            </svg>
+          </div>
+          <h3 class="service-title">IoT & Smart Devices</h3>
+          <p class="service-desc">
+            Embedded systems programming (Arduino, C/C++), ultrasonic sensing, relay control, and real-time OLED output.
+          </p>
+          <div class="service-pills">
+            <span class="pill">Arduino UNO</span>
+            <span class="pill">Relay Control</span>
+            <span class="pill">Ultrasonic HC-SR04</span>
+          </div>
+        </div>
+
+        <div class="service-card" onclick="openServiceDetail('Performance & Core Web Vitals', 'Sub-second page speeds, asset minification, critical CSS inlining, and lazy-loaded media pipelines for 100/100 Lighthouse scores.')">
+          <div class="service-icon-wrap">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+          </div>
+          <h3 class="service-title">Performance & SEO</h3>
+          <p class="service-desc">
+            Lighthouse 95+ score guarantees, SEO semantic structures, OpenGraph previews, and blazing rendering speeds.
+          </p>
+          <div class="service-pills">
+            <span class="pill">Lighthouse 95+</span>
+            <span class="pill">Semantic HTML5</span>
+            <span class="pill">CDN Caching</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Portfolio Showcase -->
+  <section class="portfolio-section" id="portfolio">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Featured Work</span>
+        <h2 class="section-title">Flagship <span class="text-gradient">Case Studies</span></h2>
+        <p class="section-desc">
+          Click any project category to filter or inspect live architectural metrics.
+        </p>
+      </div>
+
+      <div class="portfolio-filter-bar">
+        <button class="filter-btn active" onclick="filterProjects('all', this)">All Projects</button>
+        <button class="filter-btn" onclick="filterProjects('ecommerce', this)">E-Commerce</button>
+        <button class="filter-btn" onclick="filterProjects('booking', this)">Booking Engines</button>
+        <button class="filter-btn" onclick="filterProjects('iot', this)">IoT & Hardware</button>
+      </div>
+
+      <div class="portfolio-grid" id="portfolioGrid">
+        <!-- Project 1 -->
+        <div class="project-card" data-cat="ecommerce">
+          <div class="project-preview">
+            <div class="preview-bg-mesh" style="background: radial-gradient(circle at 30% 30%, #ff5b47 0%, #1a1200 100%);"></div>
+            <div class="preview-device">
+              <div class="device-header">
+                <span class="device-circle" style="background:#ff5b47;"></span>
+                <span class="device-circle"></span>
+                <span class="device-circle"></span>
+              </div>
+              <div class="device-content">
+                <span>🦞 Tapseafood Portal</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-body">
+            <span class="project-category">E-Commerce & Food Web App</span>
+            <h4 class="project-title">Tapseafood Online Ordering</h4>
+            <p class="project-desc">
+              Digital seafood menu, interactive shopping cart drawer, instant checkout totals, and dynamic item customization.
+            </p>
+            <div class="project-metrics">
+              <div class="metric-item">
+                <span class="metric-val">+310%</span>
+                <span class="metric-lbl">Order Velocity</span>
+              </div>
+              <button class="project-view-btn" onclick="openServiceDetail('Tapseafood Online Food Ordering', 'Architected with dynamic PHP cart session stores, real-time recalculation, and a sleek modern Coral/Teal UI theme.')">
+                <span>View Details</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-card" data-cat="booking">
+          <div class="project-preview">
+            <div class="preview-bg-mesh" style="background: radial-gradient(circle at 70% 30%, #c9a84c 0%, #0b1628 100%);"></div>
+            <div class="preview-device">
+              <div class="device-header">
+                <span class="device-circle" style="background:#c9a84c;"></span>
+                <span class="device-circle"></span>
+                <span class="device-circle"></span>
+              </div>
+              <div class="device-content">
+                <span>🛎️ Grand Luxe Hotel</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-body">
+            <span class="project-category">Hospitality & Booking Engine</span>
+            <h4 class="project-title">Hotel Online Booking</h4>
+            <p class="project-desc">
+              Suite reservations, interactive check-in date picker, guest selection algorithm, and booking voucher generation.
+            </p>
+            <div class="project-metrics">
+              <div class="metric-item">
+                <span class="metric-val">100%</span>
+                <span class="metric-lbl">Auto Confirmations</span>
+              </div>
+              <button class="project-view-btn" onclick="openServiceDetail('Hotel Online Booking Engine', 'Designed with luxury Navy/Gold glassmorphism aesthetics, live rate calculations, and resilient database transaction storage.')">
+                <span>View Details</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project-card" data-cat="iot">
+          <div class="project-preview">
+            <div class="preview-bg-mesh" style="background: radial-gradient(circle at 50% 50%, #00ff88 0%, #080c10 100%);"></div>
+            <div class="preview-device">
+              <div class="device-header">
+                <span class="device-circle" style="background:#00ff88;"></span>
+                <span class="device-circle"></span>
+                <span class="device-circle"></span>
+              </div>
+              <div class="device-content">
+                <span>⚡ AquaBot Dispenser</span>
+              </div>
+            </div>
+          </div>
+          <div class="project-body">
+            <span class="project-category">IoT & Embedded Hardware</span>
+            <h4 class="project-title">Arduino Water Dispenser</h4>
+            <p class="project-desc">
+              Contactless ultrasonic proximity sensing, automated 12V pump relay trigger, OLED milliliter tracker, and status LEDs.
+            </p>
+            <div class="project-metrics">
+              <div class="metric-item">
+                <span class="metric-val">0ms</span>
+                <span class="metric-lbl">Physical Contact</span>
+              </div>
+              <button class="project-view-btn" onclick="openServiceDetail('Arduino Smart Water Dispenser', 'Engineered with Arduino C++, ultrasonic range detection, I2C 0.96 OLED graphics, and hygienic hands-free operation.')">
+                <span>View Details</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Project Cost & Timeline Estimator -->
+  <section class="estimator-section" id="estimator">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Interactive Calculator</span>
+        <h2 class="section-title">Instant <span class="text-gradient">Project Estimator</span></h2>
+        <p class="section-desc">
+          Customize your project specifications below to calculate instant budget and delivery timelines.
+        </p>
+      </div>
+
+      <div class="estimator-card">
+        <div class="estimator-controls">
+          <!-- Control 1: Project Type -->
+          <div class="control-group">
+            <label>1. Select Project Tier</label>
+            <div class="project-type-pills">
+              <div class="type-radio-btn active" onclick="selectType('landing', 800, 2, this)">Landing Page</div>
+              <div class="type-radio-btn" onclick="selectType('fullweb', 1800, 4, this)">Corporate Web</div>
+              <div class="type-radio-btn" onclick="selectType('app', 3200, 7, this)">Full Web App</div>
+            </div>
+          </div>
+
+          <!-- Control 2: Page Count Slider -->
+          <div class="control-group">
+            <label>
+              <span>2. Number of Custom Pages/Modules</span>
+              <span class="range-val" id="pageCountLabel">5 Pages</span>
+            </label>
+            <input type="range" min="1" max="20" value="5" class="slider-input" id="pageSlider" oninput="updatePageCount(this.value)">
+          </div>
+
+          <!-- Control 3: Add-on Features -->
+          <div class="control-group">
+            <label>3. Desired Architecture Add-ons</label>
+            <div class="addon-checkboxes">
+              <div class="addon-item selected" onclick="toggleAddon(this, 350, 0.5)">
+                <span class="addon-check">✓</span>
+                <span>User Authentication & Roles</span>
+              </div>
+              <div class="addon-item selected" onclick="toggleAddon(this, 400, 0.5)">
+                <span class="addon-check">✓</span>
+                <span>Payment & Checkout Gateway</span>
+              </div>
+              <div class="addon-item" onclick="toggleAddon(this, 500, 1)">
+                <span class="addon-check">✓</span>
+                <span>Admin CMS Dashboard</span>
+              </div>
+              <div class="addon-item" onclick="toggleAddon(this, 450, 0.8)">
+                <span class="addon-check">✓</span>
+                <span>IoT / Hardware API Sync</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Display Panel -->
+        <div class="estimator-output">
+          <div>
+            <div class="out-tag">Real-Time Quote</div>
+            <h3 class="out-heading">Estimate Summary</h3>
+
+            <div class="out-price-box">
+              <div class="out-price-lbl">Project Investment</div>
+              <div class="out-price-num" id="totalPriceDisplay">$2,300</div>
+            </div>
+
+            <div class="out-timeline-row">
+              <span style="color: var(--text-muted);">Estimated Delivery</span>
+              <span class="out-time-val" id="totalWeeksDisplay">~4.5 Weeks</span>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary" style="width: 100%;" onclick="openContactModal(true)">
+            <span>Lock In Estimate</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Client Reviews Carousel -->
+  <section class="testimonials-section" id="testimonials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Testimonials</span>
+        <h2 class="section-title">Trusted by <span class="text-gradient">Innovators</span></h2>
+      </div>
+
+      <div class="testimonial-card-single" id="testimonialCard">
+        <div class="stars-row">★★★★★</div>
+        <p class="quote-text" id="quoteText">
+          "Ralph delivered an immaculate e-commerce platform that doubled our online sales velocity in the first 30 days. The design aesthetic is clean, fast, and completely reliable."
+        </p>
+        <div class="client-avatar" id="clientAvatar">EM</div>
+        <div class="client-name" id="clientName">Elena Morales</div>
+        <div class="client-role" id="clientRole">Managing Director, Coastal Gourmet Group</div>
+
+        <div class="carousel-nav-dots">
+          <div class="carousel-dot active" onclick="switchTestimonial(0)"></div>
+          <div class="carousel-dot" onclick="switchTestimonial(1)"></div>
+          <div class="carousel-dot" onclick="switchTestimonial(2)"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-row">
+        <div>
+          <a href="#hero" class="brand-logo">
+            <div class="brand-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              </svg>
+            </div>
+            <span>NovaCore</span>
+            <span class="brand-tag">Studio</span>
+          </a>
+          <p class="footer-desc">
+            A standalone live demonstration website showcasing modern full-stack web engineering & UI excellence.
+          </p>
+        </div>
+
+        <div>
+          <span class="badge-live-demo">
+            <span class="badge-dot" style="background:#10b981;"></span>
+            <span>Live Interactive Mode Active</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>&copy; 2026 NovaCore Studio Demo. Developed by Ralph Tuliao.</div>
+        <div>Built with Clean Vanilla HTML5, Modern CSS3 & JavaScript.</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal Dialog -->
+  <div class="modal-backdrop" id="modalBackdrop" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <h3 class="modal-title" id="modalTitle">Initiate Project</h3>
+      <p class="modal-desc" id="modalDesc">Fill out the quick briefing form below and we will connect within 24 hours.</p>
+
+      <form id="inquiryForm" onsubmit="handleInquirySubmit(event)">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" class="form-control" placeholder="e.g. Alexander Vance" required>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" class="form-control" placeholder="alex@company.com" required>
+        </div>
+        <div class="form-group">
+          <label>Project Details / Notes</label>
+          <textarea class="form-control" rows="3" placeholder="Tell us about your requirements..." id="modalNotesArea"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          <span>Submit Inquiry</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-popup" id="toastNotice">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+    <span id="toastMsg">Inquiry sent successfully!</span>
+  </div>
+
+  <script>
+    // Theme Switcher
+    function setTheme(themeName) {
+      if (themeName === 'violet') {
+        document.documentElement.removeAttribute('data-theme');
+      } else {
+        document.documentElement.setAttribute('data-theme', themeName);
+      }
+      document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
+      const activeDot = document.querySelector(`.dot-${themeName}`);
+      if (activeDot) activeDot.classList.add('active');
+    }
+
+    // Smooth Scroll
+    function scrollToId(id) {
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Portfolio Filter
+    function filterProjects(cat, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const cards = document.querySelectorAll('.project-card');
+      cards.forEach(card => {
+        const cCat = card.getAttribute('data-cat');
+        if (cat === 'all' || cCat === cat) {
+          card.style.display = 'flex';
+          setTimeout(() => { card.style.opacity = '1'; card.style.transform = 'scale(1)'; }, 20);
+        } else {
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.95)';
+          setTimeout(() => { card.style.display = 'none'; }, 200);
+        }
+      });
+    }
+
+    // Estimator State & Logic
+    let basePrice = 800;
+    let baseWeeks = 2;
+    let pageCount = 5;
+    let addonPrice = 750;
+    let addonWeeks = 1;
+
+    function recalculateEstimate() {
+      const pageCost = (pageCount - 1) * 120;
+      const pageTime = (pageCount - 1) * 0.25;
+      const total = basePrice + pageCost + addonPrice;
+      const weeks = (baseWeeks + pageTime + addonWeeks).toFixed(1);
+
+      document.getElementById('totalPriceDisplay').textContent = '$' + total.toLocaleString();
+      document.getElementById('totalWeeksDisplay').textContent = '~' + weeks + ' Weeks';
+    }
+
+    function selectType(type, price, weeks, btn) {
+      document.querySelectorAll('.type-radio-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      basePrice = price;
+      baseWeeks = weeks;
+      recalculateEstimate();
+    }
+
+    function updatePageCount(val) {
+      pageCount = parseInt(val, 10);
+      document.getElementById('pageCountLabel').textContent = pageCount + ' Pages';
+      recalculateEstimate();
+    }
+
+    function toggleAddon(el, cost, weeks) {
+      el.classList.toggle('selected');
+      const isSel = el.classList.contains('selected');
+      if (isSel) {
+        addonPrice += cost;
+        addonWeeks += weeks;
+      } else {
+        addonPrice -= cost;
+        addonWeeks -= weeks;
+      }
+      recalculateEstimate();
+    }
+
+    // Testimonials Carousel
+    const testimonials = [
+      {
+        quote: '"Ralph delivered an immaculate e-commerce platform that doubled our online sales velocity in the first 30 days. The design aesthetic is clean, fast, and completely reliable."',
+        name: "Elena Morales",
+        role: "Managing Director, Coastal Gourmet Group",
+        avatar: "EM"
+      },
+      {
+        quote: '"The booking engine completely eliminated double-bookings and cut down guest reservation times by 65%. A masterclass in full-stack execution."',
+        name: "Marcus Chen",
+        role: "Chief Operations Officer, Luxe Hospitality",
+        avatar: "MC"
+      },
+      {
+        quote: '"Integrating hardware with web software is notoriously difficult, but Ralph made the Arduino dispenser telemetry seamlessly intuitive. Truly impressive work."',
+        name: "Dr. Aris Thorne",
+        role: "IoT Systems Architect, NextWave Labs",
+        avatar: "AT"
+      }
+    ];
+
+    function switchTestimonial(idx) {
+      const t = testimonials[idx];
+      if (!t) return;
+      document.getElementById('quoteText').textContent = t.quote;
+      document.getElementById('clientName').textContent = t.name;
+      document.getElementById('clientRole').textContent = t.role;
+      document.getElementById('clientAvatar').textContent = t.avatar;
+
+      document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === idx);
+      });
+    }
+
+    // Modal Control
+    function openContactModal(fromEstimate = false) {
+      const modal = document.getElementById('modalBackdrop');
+      const title = document.getElementById('modalTitle');
+      const desc = document.getElementById('modalDesc');
+      const notes = document.getElementById('modalNotesArea');
+
+      if (fromEstimate) {
+        const estPrice = document.getElementById('totalPriceDisplay').textContent;
+        const estTime = document.getElementById('totalWeeksDisplay').textContent;
+        title.textContent = "Lock in Your Estimate";
+        desc.textContent = `Configured package: ${estPrice} (approx. ${estTime}). Let's schedule a kickoff call.`;
+        if (notes) notes.value = `Selected Estimate: ${estPrice} (${estTime}) for ${pageCount} pages.`;
+      } else {
+        title.textContent = "Start a Project";
+        desc.textContent = "Fill out the quick briefing form below and we will connect within 24 hours.";
+        if (notes) notes.value = "";
+      }
+
+      modal.classList.add('open');
+    }
+
+    function openServiceDetail(serviceName, serviceDesc) {
+      const modal = document.getElementById('modalBackdrop');
+      document.getElementById('modalTitle').textContent = serviceName;
+      document.getElementById('modalDesc').textContent = serviceDesc;
+      modal.classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modalBackdrop').classList.remove('open');
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target.id === 'modalBackdrop') closeModal();
+    }
+
+    function handleInquirySubmit(e) {
+      e.preventDefault();
+      closeModal();
+      showToast('Project briefing sent! We will connect within 24 hours.');
+      e.target.reset();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotice');
+      document.getElementById('toastMsg').textContent = msg;
+      toast.classList.add('visible');
+      setTimeout(() => { toast.classList.remove('visible'); }, 3500);
+    }
+
+    // ESC key close
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Initialize initial estimate
+    recalculateEstimate();
+  </script>
+</body>
+</html>

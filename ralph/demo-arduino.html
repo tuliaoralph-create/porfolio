@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arduino Water Dispenser &mdash; Live Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;600;700;900&family=Inter:wght@400;500;600&display=swap">
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--green:#00FF88;--green-dk:#00CC6A;--green-glow:rgba(0,255,136,.3);--amber:#FFB800;--red:#FF3333;--blue:#00CFFF;--bg:#080C10;--panel:#0D1219;--panel-lt:#121A24;--border:#1E2D3D;--text-dim:rgba(255,255,255,.45)}
+    html,body{min-height:100%;font-family:'Inter',sans-serif;background:var(--bg);color:#fff;overflow-x:hidden}
+
+    /* Scanline overlay */
+    body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,136,.015) 2px,rgba(0,255,136,.015) 4px);pointer-events:none;z-index:0}
+
+    header{position:sticky;top:0;z-index:100;background:rgba(8,12,16,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+    .logo{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:700;color:var(--green);letter-spacing:.12em;text-transform:uppercase;display:flex;align-items:center;gap:.6rem}
+    .logo-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green);animation:blink 1.5s ease-in-out infinite}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+    .header-chip{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--green);background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);border-radius:4px;padding:.25rem .6rem;letter-spacing:.05em}
+    .status-pill{display:flex;align-items:center;gap:.4rem;font-size:.75rem;color:rgba(255,255,255,.6)}
+    .status-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 2s infinite}
+
+    /* Main layout */
+    main{position:relative;z-index:1;display:grid;grid-template-columns:1fr 320px;gap:1.25rem;padding:1.25rem;max-width:1100px;margin:0 auto}
+
+    /* Left: Dispenser visual */
+    .dispenser-panel{display:flex;flex-direction:column;gap:1.25rem}
+
+    .device-frame{background:var(--panel);border:1px solid var(--border);border-radius:16px;padding:1.5rem;display:flex;flex-direction:column;align-items:center;gap:1rem;position:relative;overflow:hidden}
+    .device-frame::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent)}
+
+    .device-label{font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.2em;color:var(--text-dim);text-transform:uppercase;margin-bottom:.25rem}
+
+    /* Dispenser SVG area */
+    .dispenser-wrapper{position:relative;width:200px;height:300px}
+    .dispenser-body{position:absolute;left:50%;transform:translateX(-50%);width:120px;height:260px;background:linear-gradient(180deg,#1A2535,#0D1825);border:2px solid #2A3D55;border-radius:12px 12px 8px 8px;overflow:hidden}
+    .dispenser-brand{position:absolute;top:14px;left:50%;transform:translateX(-50%);font-family:'Orbitron',sans-serif;font-size:.5rem;letter-spacing:.12em;color:var(--green);text-align:center;white-space:nowrap;font-weight:700}
+    /* Water tank */
+    .tank{position:absolute;top:40px;left:8px;right:8px;height:150px;border:1.5px solid #2A3D55;border-radius:8px;overflow:hidden;background:#050d18}
+    .tank-water{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(0,207,255,.8),rgba(0,120,220,.9));transition:height .8s ease;border-radius:0 0 6px 6px}
+    .tank-scale{position:absolute;right:6px;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;padding:4px 0}
+    .tank-mark{width:6px;height:1px;background:rgba(255,255,255,.2)}
+    /* OLED Display */
+    .oled{position:absolute;bottom:70px;left:10px;right:10px;height:55px;background:#001a0a;border:1.5px solid #1A3A2A;border-radius:5px;padding:5px 7px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+    .oled::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 4px,rgba(0,255,136,.04) 4px,rgba(0,255,136,.04) 5px);pointer-events:none}
+    .oled-line{font-family:'Share Tech Mono',monospace;font-size:.55rem;color:var(--green);line-height:1;text-shadow:0 0 6px var(--green)}
+    /* LEDs */
+    .leds{position:absolute;bottom:45px;left:50%;transform:translateX(-50%);display:flex;gap:8px}
+    .led{width:10px;height:10px;border-radius:50%;transition:all .3s}
+    .led-red{background:#330000;border:1px solid #660000}
+    .led-green{background:#003300;border:1px solid #006600}
+    .led-red.on{background:var(--red);box-shadow:0 0 10px var(--red),0 0 20px rgba(255,51,51,.5)}
+    .led-green.on{background:var(--green);box-shadow:0 0 10px var(--green),0 0 20px var(--green-glow)}
+    /* Nozzle */
+    .nozzle{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);width:20px;height:16px;background:#1A2535;border:1.5px solid #2A3D55;border-radius:0 0 4px 4px}
+    /* Water stream */
+    .water-stream{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:6px;display:none;overflow:hidden}
+    .water-stream.flowing{display:block;animation:flow .5s linear infinite}
+    @keyframes flow{0%{background:linear-gradient(180deg,rgba(0,207,255,.9) 0%,transparent 100%)}100%{background:linear-gradient(180deg,transparent 0%,rgba(0,207,255,.9) 100%)}}
+    /* Cup */
+    .cup{position:absolute;bottom:-5px;left:50%;transform:translateX(-50%);transition:opacity .3s}
+    .cup-body{width:45px;height:40px;background:linear-gradient(180deg,rgba(255,255,255,.15),rgba(255,255,255,.05));border:1.5px solid rgba(255,255,255,.3);border-top:none;border-radius:0 0 6px 6px;position:relative;overflow:hidden}
+    .cup-water{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(0,207,255,.6),rgba(0,120,220,.8));transition:height .6s ease;border-radius:0 0 4px 4px}
+    .cup-top{width:50px;height:4px;background:rgba(255,255,255,.25);border-radius:2px;margin-left:-2.5px}
+
+    /* Sensor wave */
+    .sensor-area{position:absolute;top:10px;right:8px;display:flex;flex-direction:column;align-items:center;gap:2px}
+    .sensor-chip{width:18px;height:12px;background:#1A2535;border:1px solid #2A3D55;border-radius:2px}
+    .sensor-wave{width:22px;height:1px;background:rgba(0,207,255,.5);margin-top:1px;transform-origin:left;animation:sonar .8s ease-in-out infinite}
+    @keyframes sonar{0%,100%{transform:scaleX(1);opacity:.8}50%{transform:scaleX(1.4);opacity:.3}}
+
+    /* Metrics row */
+    .metrics-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
+    .metric-card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:.85rem;text-align:center;position:relative;overflow:hidden}
+    .metric-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--green),transparent)}
+    .metric-val{font-family:'Orbitron',sans-serif;font-size:1.3rem;font-weight:700;color:var(--green);text-shadow:0 0 12px var(--green-glow);line-height:1;margin-bottom:.3rem}
+    .metric-unit{font-size:.65rem;color:var(--text-dim);font-family:'Share Tech Mono',monospace;letter-spacing:.08em}
+    .metric-label{font-size:.7rem;color:rgba(255,255,255,.55);margin-top:.2rem}
+
+    /* Right: Control panel */
+    .control-panel{display:flex;flex-direction:column;gap:1rem}
+
+    .panel-card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:1.1rem;position:relative;overflow:hidden}
+    .panel-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,207,255,.4),transparent)}
+    .panel-title{font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-bottom:1rem}
+
+    /* Proximity meter */
+    .prox-display{text-align:center;margin-bottom:.75rem}
+    .prox-val{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:700;color:var(--blue);text-shadow:0 0 15px rgba(0,207,255,.4);line-height:1}
+    .prox-unit{font-size:.7rem;color:var(--text-dim);font-family:'Share Tech Mono',monospace}
+    .prox-bar-wrap{height:8px;background:rgba(255,255,255,.05);border-radius:999px;overflow:hidden;margin:.5rem 0}
+    .prox-bar{height:100%;border-radius:999px;transition:width .4s ease,background .4s ease}
+    .prox-status{font-size:.75rem;text-align:center;font-family:'Share Tech Mono',monospace;letter-spacing:.04em}
+
+    /* Mode selector */
+    .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+    .mode-btn{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:8px;padding:.65rem .5rem;font-family:'Inter',sans-serif;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.6);cursor:pointer;transition:all .2s;text-align:center}
+    .mode-btn:hover{border-color:var(--green);color:var(--green)}
+    .mode-btn.active{background:rgba(0,255,136,.1);border-color:var(--green);color:var(--green);box-shadow:0 0 12px rgba(0,255,136,.1)}
+    .mode-vol{font-size:.65rem;color:var(--text-dim);margin-top:.15rem}
+
+    /* Manual trigger */
+    .dispense-btn{width:100%;background:linear-gradient(135deg,rgba(0,255,136,.15),rgba(0,207,255,.1));border:1.5px solid var(--green);border-radius:10px;padding:1rem;font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;color:var(--green);cursor:pointer;letter-spacing:.12em;text-transform:uppercase;transition:all .2s;box-shadow:0 0 20px rgba(0,255,136,.05)}
+    .dispense-btn:hover:not(:disabled){background:linear-gradient(135deg,rgba(0,255,136,.25),rgba(0,207,255,.15));box-shadow:0 0 30px rgba(0,255,136,.2);transform:translateY(-1px)}
+    .dispense-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+    /* Serial log */
+    .serial-log{background:#050a05;border:1px solid #0f2010;border-radius:8px;padding:.75rem;height:140px;overflow-y:auto;font-family:'Share Tech Mono',monospace;font-size:.68rem;line-height:1.7;scrollbar-width:thin;scrollbar-color:#1a3d1a transparent}
+    .log-line{color:rgba(0,255,136,.7)}
+    .log-line.warn{color:var(--amber)}
+    .log-line.err{color:var(--red)}
+    .log-line.info{color:var(--blue)}
+
+    /* Circuit schematic strip */
+    .schematic-strip{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+    .comp{display:flex;flex-direction:column;align-items:center;gap:.25rem;font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text-dim);flex:1;min-width:55px;text-align:center}
+    .comp-icon{font-size:1.4rem}
+    .comp-line{flex:none;width:20px;height:1px;background:rgba(0,255,136,.3)}
+
+    @media(max-width:750px){main{grid-template-columns:1fr}.control-panel{order:-1}.device-frame{flex-direction:row;flex-wrap:wrap}}
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <span class="logo-dot"></span>
+    AquaBot v2.1
+  </div>
+  <div class="header-chip">Arduino UNO &bull; HC-SR04 &bull; OLED</div>
+  <div class="status-pill">
+    <span class="status-dot"></span>
+    System Online
+  </div>
+</header>
+
+<main>
+  <!-- Left: Dispenser visual + metrics -->
+  <div class="dispenser-panel">
+    <div class="device-frame">
+      <div class="device-label">Dispenser Unit &mdash; Live View</div>
+      <div class="dispenser-wrapper">
+        <div class="dispenser-body">
+          <div class="dispenser-brand">AQUABOT</div>
+          <div class="tank" id="tank">
+            <div class="tank-water" id="tankWater" style="height:80%"></div>
+            <div class="tank-scale">
+              <div class="tank-mark"></div><div class="tank-mark"></div>
+              <div class="tank-mark"></div><div class="tank-mark"></div>
+              <div class="tank-mark"></div>
+            </div>
+          </div>
+          <div class="oled">
+            <div class="oled-line" id="oledLine1">AQUABOT v2.1</div>
+            <div class="oled-line" id="oledLine2">Ready &gt; Dist: --cm</div>
+            <div class="oled-line" id="oledLine3">Total: 0 mL</div>
+          </div>
+          <div class="leds">
+            <div class="led led-red" id="ledRed"></div>
+            <div class="led led-green" id="ledGreen"></div>
+          </div>
+          <div class="nozzle"></div>
+          <div class="water-stream" id="waterStream" style="height:30px"></div>
+          <div class="sensor-area">
+            <div class="sensor-chip"></div>
+            <div class="sensor-wave"></div>
+          </div>
+          <div class="cup" id="cupEl">
+            <div class="cup-top"></div>
+            <div class="cup-body">
+              <div class="cup-water" id="cupWater" style="height:0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:.7rem;color:var(--text-dim);font-family:'Share Tech Mono',monospace;text-align:center;line-height:1.6">
+        Hover over the sensor area to simulate<br>cup detection &bull; Click dispense to trigger pump
+      </div>
+    </div>
+
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-val" id="mDispensed">0</div>
+        <div class="metric-unit">mL dispensed</div>
+        <div class="metric-label">This Session</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val" id="mTotal">0</div>
+        <div class="metric-unit">mL total</div>
+        <div class="metric-label">All Time</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-val" id="mCycles">0</div>
+        <div class="metric-unit">cycles</div>
+        <div class="metric-label">Dispenses</div>
+      </div>
+    </div>
+
+    <div class="schematic-strip">
+      <div class="comp"><span class="comp-icon">&#x1F4A1;</span>5V Power</div>
+      <div class="comp-line"></div>
+      <div class="comp"><span class="comp-icon">&#x1F9E0;</span>Arduino UNO</div>
+      <div class="comp-line"></div>
+      <div class="comp"><span class="comp-icon">&#x1F4E1;</span>HC-SR04</div>
+      <div class="comp-line"></div>
+      <div class="comp"><span class="comp-icon">&#x26A1;</span>5V Relay</div>
+      <div class="comp-line"></div>
+      <div class="comp"><span class="comp-icon">&#x1F4A7;</span>12V Pump</div>
+      <div class="comp-line"></div>
+      <div class="comp"><span class="comp-icon">&#x1F4FA;</span>OLED</div>
+    </div>
+  </div>
+
+  <!-- Right: Controls -->
+  <div class="control-panel">
+    <div class="panel-card">
+      <div class="panel-title">Ultrasonic Sensor &mdash; HC-SR04</div>
+      <div class="prox-display">
+        <div class="prox-val" id="proxVal">--</div>
+        <div class="prox-unit">cm distance</div>
+      </div>
+      <div class="prox-bar-wrap">
+        <div class="prox-bar" id="proxBar" style="width:0%;background:var(--blue)"></div>
+      </div>
+      <div class="prox-status" id="proxStatus" style="color:var(--text-dim)">Waiting for object...</div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-title">Dispense Mode</div>
+      <div class="mode-grid">
+        <button class="mode-btn active" onclick="setMode(100,this)">Small<div class="mode-vol">100 mL</div></button>
+        <button class="mode-btn" onclick="setMode(250,this)">Medium<div class="mode-vol">250 mL</div></button>
+        <button class="mode-btn" onclick="setMode(500,this)">Large<div class="mode-vol">500 mL</div></button>
+        <button class="mode-btn" onclick="setMode(0,this)">Continuous<div class="mode-vol">Until removed</div></button>
+      </div>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-title">Manual Override &mdash; Pump Relay</div>
+      <button class="dispense-btn" id="dispenseBtn" onclick="manualDispense()">
+        &#x26A1; Dispense Water
+      </button>
+    </div>
+
+    <div class="panel-card">
+      <div class="panel-title">Serial Monitor &mdash; 9600 baud</div>
+      <div class="serial-log" id="serialLog"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+var state={
+  tankLevel:80,
+  totalMl:0,
+  sessionMl:0,
+  cycles:0,
+  mode:100,
+  dispensing:false,
+  cupPresent:false,
+  dispTimer:null
+};
+var logLines=[];
+
+function log(msg,type){
+  var now=new Date();
+  var ts='['+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0')+'] ';
+  logLines.push({text:ts+msg,type:type||'log'});
+  if(logLines.length>80)logLines.shift();
+  renderLog();
+}
+function renderLog(){
+  var el=document.getElementById('serialLog');
+  el.innerHTML=logLines.map(function(l){return '<div class="log-line '+(l.type||'')+'">'+l.text+'</div>';}).join('');
+  el.scrollTop=el.scrollHeight;
+}
+function setMode(ml,btn){
+  state.mode=ml;
+  document.querySelectorAll('.mode-btn').forEach(function(b){b.classList.remove('active');});
+  if(btn)btn.classList.add('active');
+  log('Mode set: '+(ml===0?'Continuous':ml+'mL'),'info');
+}
+function updateMetrics(){
+  document.getElementById('mDispensed').textContent=state.sessionMl;
+  document.getElementById('mTotal').textContent=state.totalMl;
+  document.getElementById('mCycles').textContent=state.cycles;
+  document.getElementById('tankWater').style.height=Math.max(0,state.tankLevel)+'%';
+  document.getElementById('oledLine3').textContent='Total: '+state.totalMl+' mL';
+}
+function updateOLED(dist,status){
+  document.getElementById('oledLine2').textContent='Dist: '+(dist!==null?dist+'cm':'--cm')+' '+status;
+}
+function startDispense(){
+  if(state.dispensing)return;
+  if(state.tankLevel<=2){log('TANK EMPTY - refill required','err');blinkRed();return;}
+  state.dispensing=true;
+  var btn=document.getElementById('dispenseBtn');
+  btn.disabled=true;btn.textContent='Pumping...';
+  document.getElementById('waterStream').classList.add('flowing');
+  document.getElementById('ledGreen').classList.add('on');
+  document.getElementById('ledRed').classList.remove('on');
+  log('Pump relay ON - dispensing '+( state.mode===0?'continuous':state.mode+'mL'),'info');
+  updateOLED(null,'PUMP ON');
+  var target=state.mode===0?9999:state.mode;
+  var dispensed=0;
+  var rate=20;
+  state.dispTimer=setInterval(function(){
+    var chunk=Math.min(rate,target-dispensed,state.tankLevel*3);
+    if(chunk<=0){stopDispense();return;}
+    dispensed+=chunk;
+    state.sessionMl+=chunk;
+    state.totalMl+=chunk;
+    state.tankLevel=Math.max(0,state.tankLevel-chunk/3);
+    var cupPct=Math.min(95,dispensed/target*90);
+    document.getElementById('cupWater').style.height=cupPct+'%';
+    updateOLED(null,'Disp:'+dispensed+'mL');
+    updateMetrics();
+    if(dispensed>=target){stopDispense();}
+  },150);
+}
+function stopDispense(){
+  clearInterval(state.dispTimer);
+  if(!state.dispensing)return;
+  state.dispensing=false;
+  state.cycles++;
+  document.getElementById('waterStream').classList.remove('flowing');
+  document.getElementById('ledGreen').classList.remove('on');
+  document.getElementById('dispenseBtn').disabled=false;
+  document.getElementById('dispenseBtn').textContent='\u26A1 Dispense Water';
+  log('Pump relay OFF - cycle complete','log');
+  log('Dispensed this cycle: '+state.sessionMl+'mL','log');
+  updateOLED(null,'Done');
+  updateMetrics();
+}
+function manualDispense(){
+  log('Manual override triggered','warn');
+  startDispense();
+}
+function blinkRed(){
+  var r=document.getElementById('ledRed');
+  r.classList.add('on');
+  setTimeout(function(){r.classList.remove('on');},600);
+}
+function simulateSensor(){
+  var dist=Math.floor(3+Math.random()*22);
+  var bar=document.getElementById('proxBar');
+  var status=document.getElementById('proxStatus');
+  var val=document.getElementById('proxVal');
+  val.textContent=dist;
+  var pct=Math.min(100,(30-dist)/27*100);
+  bar.style.width=pct+'%';
+  if(dist<8){
+    bar.style.background='var(--green)';
+    status.textContent='CUP DETECTED - Triggering pump';
+    status.style.color='var(--green)';
+    document.getElementById('oledLine2').textContent='Dist: '+dist+'cm CUP OK';
+    if(!state.dispensing&&!state.cupPresent){
+      state.cupPresent=true;
+      log('HC-SR04: object at '+dist+'cm - CUP DETECTED','log');
+      log('Threshold: <8cm - activating relay','log');
+      startDispense();
+    }
+  }else if(dist<15){
+    bar.style.background='var(--amber)';
+    status.textContent='Object nearby ('+dist+'cm)';
+    status.style.color='var(--amber)';
+    state.cupPresent=false;
+    updateOLED(dist,'near');
+    if(state.dispensing)stopDispense();
+    blinkRed();
+  }else{
+    bar.style.background='var(--blue)';
+    status.textContent='No object detected';
+    status.style.color='var(--text-dim)';
+    state.cupPresent=false;
+    updateOLED(dist,'--');
+    if(state.dispensing)stopDispense();
+    document.getElementById('ledRed').classList.add('on');
+    setTimeout(function(){document.getElementById('ledRed').classList.remove('on');},200);
+    document.getElementById('ledGreen').classList.remove('on');
+  }
+}
+// Startup sequence
+log('AquaBot v2.1 initializing...','info');
+setTimeout(function(){log('Checking HC-SR04 sensor...','log');},400);
+setTimeout(function(){log('HC-SR04 OK - trigger pin 9, echo pin 10','log');},900);
+setTimeout(function(){log('OLED display initialized (I2C 0x3C)','log');},1400);
+setTimeout(function(){log('Relay pin 7 configured OUTPUT','log');},1900);
+setTimeout(function(){log('Tank level: 80% - System ready','info');},2400);
+setTimeout(function(){log('Place cup under nozzle to begin...','log');},2900);
+setInterval(function(){
+  var dist=Math.floor(5+Math.random()*30);
+  document.getElementById('proxVal').textContent=dist;
+  var pct=Math.min(100,(35-dist)/32*100);
+  document.getElementById('proxBar').style.width=Math.max(0,pct)+'%';
+  if(dist<8&&!state.dispensing){
+    document.getElementById('proxBar').style.background='var(--green)';
+    document.getElementById('proxStatus').textContent='CUP DETECTED at '+dist+'cm';
+    document.getElementById('proxStatus').style.color='var(--green)';
+  }else if(!state.dispensing){
+    document.getElementById('proxBar').style.background='var(--blue)';
+    document.getElementById('proxStatus').textContent='Distance: '+dist+' cm';
+    document.getElementById('proxStatus').style.color='var(--text-dim)';
+    document.getElementById('oledLine2').textContent='Dist: '+dist+'cm idle';
+  }
+},600);
+updateMetrics();
+</script>
+</body>
+</html>
